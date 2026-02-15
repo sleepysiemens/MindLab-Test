@@ -39,7 +39,7 @@ class UserController extends Controller
         return response()->json([
             'failed'  => false,
             'message' => 'Пользователь создан.',
-            'data'    => $user,
+            'data'    => new UserResource($user),
         ]);
     }
 
@@ -63,7 +63,7 @@ class UserController extends Controller
         return response()->json([
             'failed'  => false,
             'message' => 'Пользователь обновлен.',
-            'data'    => $user,
+            'data'    => new UserResource($user),
         ]);
     }
 
@@ -97,15 +97,6 @@ class UserController extends Controller
         return response()->json([
             'failed'  => false,
             'message' => 'Пользователь деактивирован.',
-        ]);
-    }
-
-    public function errorHandle(string $message, string $error): JsonResponse
-    {
-        return response()->json([
-            'failed'  => true,
-            'message' => $message,
-            'error'   => $error,
         ]);
     }
 }
