@@ -13,4 +13,8 @@ interface UserServiceInterface
     public function getById(int $id): User;
 
     public function createUser(array $data): User;
+    public function updateUser(int $id, array $data): User;
+    public function deleteUser(int $id): void;
+
+    public function deactivateUser(int $id): User;
 }

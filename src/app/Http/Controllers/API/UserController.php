@@ -87,7 +87,7 @@ class UserController extends Controller
     public function deactivate(int $id): JsonResponse
     {
         try {
-            $this->userService->updateUser($id, ['is_active' => false]);
+            $this->userService->deactivateUser($id);
         }catch (QueryException $e) {
             return $this->errorHandle('Ошибка при работе с БД', $e->getMessage());
         } catch (Throwable $e) {

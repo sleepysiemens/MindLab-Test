@@ -67,4 +67,9 @@ class UserService implements UserServiceInterface
         $user = $this->getById($id);
         $user->delete();
     }
+
+    public function deactivateUser(int $id): User
+    {
+        return $this->updateUser($id, ['is_active' => 0]);
+    }
 }
