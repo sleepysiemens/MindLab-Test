@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests\Users;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\AbstractRequest;
 
-class AbstractUserRequest extends FormRequest
+class AbstractUserRequest extends AbstractRequest
 {
     public function authorize(): bool
     {
@@ -18,17 +16,6 @@ class AbstractUserRequest extends FormRequest
     public function rules(): array
     {
         return [];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'failed' => true,
-                'message' => 'Ошибка валидации',
-                'errors'  => $validator->errors()
-            ], 422)
-        );
     }
 
     public function messages(): array
