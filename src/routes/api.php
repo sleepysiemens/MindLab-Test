@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,8 @@ Route::group(['prefix' => 'roles'], function () {
     Route::get('/{id}', [RoleController::class, 'show'])->name('api.roles.show');
     Route::patch('/{id}', [RoleController::class, 'update'])->name('api.roles.update');
     Route::delete('/{id}', [RoleController::class, 'delete'])->name('api.roles.delete');
+});
+
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('', [AuthController::class, 'login'])->name('api.auth.');
 });
