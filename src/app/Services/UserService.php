@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use Throwable;
 
 class UserService implements UserServiceInterface
 {
@@ -21,15 +22,19 @@ class UserService implements UserServiceInterface
             ->paginate($onPageCount);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function getById(int $id): User
     {
         $user =  User::query()
             ->with('roles')
             ->find($id);
 
-        if (! $user) {
-            throw new ModelNotFoundException("Пользователь с ID = $id не найден");
-        }
+        throw_if(
+            ! $user,
+            new ModelNotFoundException("Пользователь с ID = $id не найден")
+        );
 
         return $user;
     }
@@ -45,6 +50,9 @@ class UserService implements UserServiceInterface
         return $user;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function updateUser(int $id, array $data): User
     {
         $user = $this->getById($id);
@@ -62,12 +70,18 @@ class UserService implements UserServiceInterface
         return $user->fresh('roles');
     }
 
+    /**
+     * @throws Throwable
+     */
     public function deleteUser(int $id): void
     {
         $user = $this->getById($id);
         $user->delete();
     }
 
+    /**
+     * @throws Throwable
+     */
     public function deactivateUser(int $id): User
     {
         return $this->updateUser($id, ['is_active' => 0]);

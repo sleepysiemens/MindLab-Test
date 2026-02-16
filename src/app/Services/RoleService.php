@@ -6,6 +6,7 @@ use App\Interfaces\RoleServiceInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\Permission\Models\Role;
+use Throwable;
 
 class RoleService implements RoleServiceInterface
 {
@@ -17,15 +18,19 @@ class RoleService implements RoleServiceInterface
             ->paginate($onPageCount);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function getById(int $id): Role
     {
         $role = Role::query()
             ->select(['name', 'guard_name'])
             ->find($id);
 
-        if (! $role) {
-            throw new ModelNotFoundException("Роль с ID = $id не найдена");
-        }
+        throw_if(
+            ! $role,
+            new ModelNotFoundException("Роль с ID = $id не найдена")
+        );
 
         return $role;
     }
@@ -35,6 +40,9 @@ class RoleService implements RoleServiceInterface
         return Role::query()->create($data);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function updateRole(int $id, array $data): Role
     {
         $role = $this->getById($id);
@@ -43,6 +51,9 @@ class RoleService implements RoleServiceInterface
         return $role;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function deleteRole(int $id): void
     {
         $role = $this->getById($id);

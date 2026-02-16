@@ -43,7 +43,7 @@ class AuthController extends AbstractAPIController
     {
         $this->authService->logout();
 
-        return $this->getResponse(message: 'Вы успешно вышли из системы.',);
+        return $this->getResponse(message: 'Вы успешно вышли из системы.');
     }
 
     public function refresh(): JsonResponse
@@ -77,6 +77,6 @@ class AuthController extends AbstractAPIController
             return $this->errorHandle($e->getMessage(), code: 422);
         }
 
-        return $this->getResponse(message: 'Пароль успешно сброшен. Выполните вход с новым паролем.',);
+        return $this->getResponse(message: 'Пароль успешно сброшен. Выполните вход с новым паролем.');
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Services;
 
 
+use App\Interfaces\AuthServiceInterface;
+use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,7 +13,7 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Throwable;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class AuthService
+class AuthService implements AuthServiceInterface
 {
     /**
      * @throws Throwable
@@ -44,9 +46,14 @@ class AuthService
         return Auth::refresh();
     }
 
+    /**
+     * @throws Throwable
+     */
     public function changePassword(array $data): void
     {
+        /** @var User $user */
         $user = auth()->user();
+
         throw_if(
             ! Hash::check($data['old_password'], $user->password),
             new ValidationException('Неверный пароль.'),
