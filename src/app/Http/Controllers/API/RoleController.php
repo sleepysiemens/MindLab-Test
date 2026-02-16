@@ -9,6 +9,7 @@ use App\Http\Resources\RoleResource;
 use App\Services\RoleService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Throwable;
 
@@ -17,9 +18,9 @@ class RoleController extends AbstractAPIController
     public function __construct(private readonly RoleService $roleService) {}
 
     /** Вывод списка ролей */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $roles = $this->roleService->paginate();
+        $roles = $this->roleService->paginate(currPage: (int) $request->query('page'));
 
         return RoleResource::collection($roles);
     }

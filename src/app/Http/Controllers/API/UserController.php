@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Throwable;
 
@@ -17,9 +18,9 @@ class UserController extends AbstractAPIController
     public function __construct(private readonly UserService $userService) {}
 
     /** Вывод списка пользователей */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $users = $this->userService->paginate();
+        $users = $this->userService->paginate(currPage: (int) $request->query('page'));
 
         return UserResource::collection($users);
     }

@@ -8,18 +8,29 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Throwable;
 
 class UserService implements UserServiceInterface
 {
-    public function paginate(int $onPageCount = 15): LengthAwarePaginator
+    public function paginate(int $onPageCount = 15, int $currPage = 1): LengthAwarePaginator
     {
-        return User::query()
-            ->select(['id', 'email', 'name', 'is_active', 'created_at'])
-            ->with('roles')
-            ->orderBy('id')
-            ->paginate($onPageCount);
+        $params = [
+            'on_page' => $onPageCount,
+            'page'    => $currPage,
+        ];
+
+       return Cache::tags(['users'])->rememberForever(
+           'users:' . md5(json_encode($params)),
+           function () use ($onPageCount) {
+               return User::query()
+                   ->select(['id', 'email', 'name', 'is_active', 'created_at'])
+                   ->with('roles')
+                   ->orderBy('id')
+                   ->paginate($onPageCount);
+           }
+       );
     }
 
     /**
@@ -27,16 +38,21 @@ class UserService implements UserServiceInterface
      */
     public function getById(int $id): User
     {
-        $user =  User::query()
-            ->with('roles')
-            ->find($id);
+        return Cache::tags(['users'])->rememberForever(
+            "user:$id",
+            function () use ($id) {
+                $user = User::query()
+                    ->with('roles')
+                    ->find($id);
 
-        throw_if(
-            ! $user,
-            new ModelNotFoundException("Пользователь с ID = $id не найден")
+                throw_if(
+                    ! $user,
+                    new ModelNotFoundException("Пользователь с ID = $id не найден")
+                );
+
+                return $user;
+            }
         );
-
-        return $user;
     }
 
     public function createUser(array $data): User
