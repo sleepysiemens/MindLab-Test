@@ -22,7 +22,7 @@ class RoleService implements RoleServiceInterface
             'roles:' . md5(json_encode($params)),
             function () use ($onPageCount) {
                 return Role::query()
-                    ->select(['name', 'guard_name'])
+                    ->select(['id', 'name', 'guard_name'])
                     ->orderBy('id')
                     ->paginate($onPageCount);
             }
@@ -38,7 +38,7 @@ class RoleService implements RoleServiceInterface
             "role:$id",
             function () use ($id) {
                 $role = Role::query()
-                    ->select(['name', 'guard_name'])
+                    ->select(['id', 'name', 'guard_name'])
                     ->find($id);
 
                 throw_if(
