@@ -20,6 +20,6 @@ class AdminUserSeeder extends Seeder
             'is_active'         => true,
         ];
 
-        User::query()->create($adminData)->assignRole('admin');
+        User::query()->create($adminData)->assignRole(['admin']);
     }
 }

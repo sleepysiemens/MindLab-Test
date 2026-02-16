@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasRoles;
 
@@ -24,6 +25,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected string $guard_name = 'api';
+
 
     /** @return array<string, string> */
     protected function casts(): array
