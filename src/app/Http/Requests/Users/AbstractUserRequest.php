@@ -8,7 +8,7 @@ class AbstractUserRequest extends AbstractRequest
 {
     public function authorize(): bool
     {
-        return $this->user->hasRole('admin');
+        return auth()->user()->hasRole('admin');
     }
 
     public function rules(): array
