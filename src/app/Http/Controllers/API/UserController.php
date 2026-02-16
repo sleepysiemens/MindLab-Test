@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Http\Resources\UserResource;
@@ -13,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Throwable;
 
-class UserController extends Controller
+class UserController extends AbstractAPIController
 {
     public function __construct(private readonly UserService $userService) {}
 
@@ -36,17 +35,18 @@ class UserController extends Controller
             return $this->errorHandle('Произошла ошибка', $e->getMessage());
         }
 
-        return response()->json([
-            'failed'  => false,
-            'message' => 'Пользователь создан.',
-            'data'    => new UserResource($user),
-        ]);
+        return $this->getResponse(
+            message: 'Пользователь создан.',
+            data: new UserResource($user)
+        );
     }
 
     /** Информация о пользователе */
-    public function show(int $id): UserResource
+    public function show(int $id): JsonResponse
     {
-        return new UserResource($this->userService->getById($id));
+        return $this->getResponse(
+            data: new UserResource($this->userService->getById($id))
+        );
     }
 
     /** Обновление пользователя */
@@ -60,11 +60,10 @@ class UserController extends Controller
             return $this->errorHandle('Произошла ошибка', $e->getMessage());
         }
 
-        return response()->json([
-            'failed'  => false,
-            'message' => 'Пользователь обновлен.',
-            'data'    => new UserResource($user),
-        ]);
+        return $this->getResponse(
+            message: 'Пользователь обновлен.',
+            data: new UserResource($user)
+        );
     }
 
     /** Удаление пользователя */
@@ -78,10 +77,9 @@ class UserController extends Controller
             return $this->errorHandle('Произошла ошибка', $e->getMessage());
         }
 
-        return response()->json([
-            'failed'  => false,
-            'message' => 'Пользователь удален.',
-        ]);
+        return $this->getResponse(
+            message: 'Пользователь удален.',
+        );
     }
 
     public function deactivate(int $id): JsonResponse
@@ -94,9 +92,8 @@ class UserController extends Controller
             return $this->errorHandle('Произошла ошибка', $e->getMessage());
         }
 
-        return response()->json([
-            'failed'  => false,
-            'message' => 'Пользователь деактивирован.',
-        ]);
+        return $this->getResponse(
+            message: 'Пользователь деактивирован.',
+        );
     }
 }

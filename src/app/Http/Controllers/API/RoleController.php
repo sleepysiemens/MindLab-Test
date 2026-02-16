@@ -1,19 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Roles\StoreRoleRequest;
 use App\Http\Requests\Roles\UpdateRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Services\RoleService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Throwable;
 
-class RoleController extends Controller
+class RoleController extends AbstractAPIController
 {
     public function __construct(private readonly RoleService $roleService) {}
 
@@ -36,17 +35,18 @@ class RoleController extends Controller
             return $this->errorHandle('Произошла ошибка', $e->getMessage());
         }
 
-        return response()->json([
-            'failed'  => false,
-            'message' => 'Роль создана.',
-            'data'    => new RoleResource($role),
-        ]);
+        return $this->getResponse(
+            message: 'Роль создана.',
+            data: new RoleResource($role)
+        );
     }
 
     /** Информация о роли */
-    public function show(int $id): RoleResource
+    public function show(int $id): JsonResponse
     {
-        return new RoleResource($this->roleService->getById($id));
+        return $this->getResponse(
+            data: new RoleResource($this->roleService->getById($id))
+        );
     }
 
     /** Обновление роли */
@@ -60,11 +60,10 @@ class RoleController extends Controller
             return $this->errorHandle('Произошла ошибка', $e->getMessage());
         }
 
-        return response()->json([
-            'failed'  => false,
-            'message' => 'Роль обновлена',
-            'data'    => new RoleResource($role),
-        ]);
+        return $this->getResponse(
+            message: 'Роль обновлена.',
+            data: new RoleResource($role)
+        );
     }
 
     public function delete(int $id): JsonResponse
@@ -77,9 +76,7 @@ class RoleController extends Controller
             return $this->errorHandle('Произошла ошибка', $e->getMessage());
         }
 
-        return response()->json([
-            'failed'  => false,
-            'message' => 'Роль удалена.',
-            ]);
+        return $this->getResponse(
+            message: 'Роль удалена.');
     }
 }
