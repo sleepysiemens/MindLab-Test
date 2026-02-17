@@ -10,6 +10,8 @@
 
 `docker compose exec app php artisan key:gen`
 
+`docker compose exec app php artisan jwt:secret`
+
 `docker compose exec app php artisan migrate --seed`
 
 После этих команд получаем запущенное приложение по адресу http://localhost:8080
