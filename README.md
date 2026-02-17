@@ -6,6 +6,8 @@
 
 `docker compose exec app composer install`
 
+`cp src/.env.example src/.env`
+
 `docker compose exec app php artisan key:gen`
 
 `docker compose exec app php artisan migrate --seed`
