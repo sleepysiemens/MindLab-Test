@@ -7,8 +7,7 @@ class UpdateRoleRequest extends AbstractRoleRequest
     public function rules(): array
     {
         return [
-            'name'       => ['string', 'max:255'],
-            'guard_name' => ['string', 'max:255'],
+            'name' => ['string', 'max:255'],
         ];
     }
 }
